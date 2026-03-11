@@ -98,7 +98,7 @@ CKPT_ARGS=(
   --ref-load "${REF_LOAD}"
   --load "${RESUME_LOAD}"
   --save "${SAVE_CKPT}"
-  --save-interval 3
+  --save-interval 5
   --rotary-base 1000000
 )
 
@@ -165,7 +165,7 @@ WANDB_KEY_VALUE=${WANDB_KEY:-${WANDB_API_KEY:-}}
 if [ -n "${WANDB_KEY_VALUE}" ]; then
   WANDB_ARGS=(
     --use-wandb
-    --wandb-project slime
+    --wandb-project OpenClaw-RL
     --wandb-group qwen3-8B-prm-2nodes-rl_terminal
     --wandb-key ${WANDB_KEY_VALUE}
   )

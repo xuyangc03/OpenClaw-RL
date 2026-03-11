@@ -66,7 +66,7 @@ This script:
 - Sets `DATASET_DIR` and `TBENCH_OUTPUT_ROOT` under `terminal-rl/` by default.
 - Starts the pool server with `python -m terminal-rl.remote.pool_server` on `0.0.0.0:18081` (overridable via `ENV_SERVER_PORT`, `WORKER_MAX_TASKS`, `WORKER_MAX_RUNS_PER_TASK`).
 
-Run in background / under a process manager as needed. Example (nohup`):
+Run in background / under a process manager as needed. Example (`nohup`):
 
 ```bash
 nohup bash terminal-rl/remote/run_pool_server.sh > pool_server.log 2>&1 &

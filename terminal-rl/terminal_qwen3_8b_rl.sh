@@ -62,7 +62,7 @@ CKPT_ARGS=(
   --ref-load "${REF_LOAD}"
   --load "${RESUME_LOAD}"
   --save "${SAVE_CKPT}"
-  --save-interval 3
+  --save-interval 5
   --rotary-base 1000000
 )
 
@@ -128,7 +128,7 @@ OPTIMIZER_ARGS=(
 
 WANDB_ARGS=(
    --use-wandb
-   --wandb-project slime
+   --wandb-project OpenClaw-RL
    --wandb-group qwen3-8B-rl_terminal
    --wandb-key ${WANDB_KEY}
 )

@@ -56,7 +56,7 @@ def _build_samples(
     outcome: float,
     status: Sample.Status,
     prm_turn_scores: dict[int, float] | None = None,
-    prm_coef: float = 1.0,
+    prm_step_coef: float = 1.0,
     discount: float = 1.0,
     encourage: bool = False,
 ) -> List[Sample]:
@@ -92,7 +92,7 @@ def _build_samples(
 
         if prm_turn_scores is not None:
             prm = prm_turn_scores.get(turn_idx, 0.0)
-            final = discounted_base + prm_coef * prm
+            final = discounted_base + prm_step_coef * prm
             s.metadata["step_wise"] = {
                 "step_scores": [prm],
                 "step_scores_with_outcome": [final],
@@ -284,7 +284,7 @@ async def generate(
     lease_id: Optional[str] = None
 
     prm_enable = bool(getattr(args, "prm_enable", False)) and (not evaluation)
-    prm_coef = float(getattr(args, "prm_turn_coef", 1.0))
+    prm_step_coef = float(getattr(args, "prm_step_coef", 1.0))
     prm_agent: TerminalPRMAgent | None = None
     prm_pending: list[tuple[int, asyncio.Task]] = []
     prm_turn_scores: dict[int, float] = {}
@@ -367,7 +367,10 @@ async def generate(
                 history_mode=str(getattr(args, "prm_history_mode", "head_tail")),
             )
             logger.info(
-                "%s PRM enabled: url=%s coef=%.3f", _log_tag, prm_sglang_url, prm_coef
+                "%s PRM enabled: url=%s coef=%.3f",
+                _log_tag,
+                prm_sglang_url,
+                prm_step_coef,
             )
 
         agent_runner = create_agent_runner(
@@ -591,7 +594,7 @@ async def generate(
         if prm_agent is not None:
             sample.metadata["prm"] = {
                 "enabled": True,
-                "coef": prm_coef,
+                "coef": prm_step_coef,
                 "turn_scores": prm_turn_scores,
                 "turn_details": prm_turn_details,
             }
@@ -603,7 +606,7 @@ async def generate(
             outcome=reward,
             status=status,
             prm_turn_scores=(prm_turn_scores if prm_agent is not None else None),
-            prm_coef=prm_coef,
+            prm_step_coef=prm_step_coef,
             discount=1.0,
             encourage=False,
         )

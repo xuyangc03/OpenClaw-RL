@@ -2,19 +2,47 @@
 
 RL training for terminal agents. The agent interacts with Docker-hosted environments and is trained with GRPO (optional PRM).
 
-This workflow has two independent components:
+## Architecture & requirements
 
-- **Training machine** runs task router + Ray + training scripts, and connects to workers via `WORKER_URLS`
-- **Remote workers:** run the pool server and execute tasks (Docker required): [remote/README.md](remote/README.md)
+This setup has two independent components:
 
----
-
-## Prerequisites
-
-- **Training machine:** GPU node/cluster with the required training dependencies.
-- **Remote workers:** Docker-capable hosts reachable from the training machine (default pool server port **18081**). Setup: [remote/README.md](remote/README.md).
+- **Training machine**: runs task router + Ray + training scripts. Requires a GPU environment and the training dependencies. Connects to workers via `WORKER_URLS`.
+- **Remote workers:**: run the pool server and execute tasks inside Docker. Requires Docker and network reachability from the training machine (default port **18081**).
 
 ---
+
+## Directory structure
+
+```
+terminal-rl/
+├── README.md
+├── router_server.py          # Task router service
+├── generate.py               # Generation entry
+├── agent_runner.py           # Agent execution and rollout
+├── env_client.py             # Environment client
+├── inference_client.py       # Inference client
+├── request_utils.py
+├── custom_types.py
+├── rollout_log.py
+├── terminal_qwen3_8b_rl.sh
+├── terminal_qwen3_8b_prm_rl_2nodes.sh
+├── agent/
+│   ├── camel_agent.py        # Rollout agent based on camel-ai ChatAgent
+│   └── prm_agent.py          # PRM scoring agent
+├── data_utils/
+│   ├── download.py           # Dataset download
+│   ├── convert_task_to_dataset.py  # Convert tasks to training JSONL
+│   └── load_tasks.py
+├── remote/                   # Remote workers and Docker environment
+│   ├── README.md             # Worker deployment guide
+│   ├── pool_server.py        # Task pool server (port 18081)
+│   ├── terminal_env.py       # Terminal environment wrapper
+│   ├── run_pool_server.sh
+│   ├── setup.sh
+│   ├── compose_override.yaml
+│   └── docker_compose_utils.py
+└── dataset/                  # Dataset directory
+```
 
 ## Instructions
 
@@ -102,4 +130,5 @@ bash terminal-rl/terminal_qwen3_8b_prm_rl_2nodes.sh
 ## Notes
 
 - `WORKER_URLS` must point to already-running pool servers.
-- As an example, one rollout agent implementation in this repo is based on **CAMEL** (see `terminal-rl/agent/camel_agent.py` and [CAMEL](https://github.com/camel-ai/camel)).
+- The rollout agent implementation in `terminal-rl/agent/camel_agent.py` is based on [camel-ai/camel](https://github.com/camel-ai/camel)'s `ChatAgent`.
+
