@@ -333,11 +333,16 @@ build_runtime_env_json() {
   python3 - <<'PY'
 import json, os
 
+conda_env = os.environ.get("ROUTER_CONDA_ENV_PATH", "")
+py_ver = os.environ.get("CONDA_PYTHON_VERSION", "3.12")
+site_packages = f"{conda_env}/lib/python{py_ver}/site-packages" if conda_env else ""
+
 parts = [
   os.environ.get("REPO_ROOT",""),
   os.environ.get("SLIME_PKG_DIR",""),
   os.environ.get("MEGATRON_DIR",""),
   os.environ.get("SCRIPT_DIR",""),
+  site_packages,
 ]
 pythonpath = ":".join([p for p in parts if p])
 

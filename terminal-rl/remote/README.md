@@ -107,7 +107,7 @@ When running the pool server (via `run_pool_server.sh` or `python -m terminal-rl
 | `COMPOSE_OVERRIDE_PATH`      | —                           | Optional Docker Compose override file.                                                                      |
 
 
-Example with custom port and limits:
+Example with custom port and task limits:
 
 ```bash
 export ENV_SERVER_PORT=18082
@@ -119,6 +119,12 @@ bash terminal-rl/remote/run_pool_server.sh
 Example using pre-built images from a registry (pull mode). Set the image source and prefix; you can build and push your own:
 
 ```bash
+export http_proxy="http://<proxy-host>:<port>"
+export https_proxy="http://<proxy-host>:<port>"
+export no_proxy="localhost,127.0.0.1"
+export HTTP_PROXY="$http_proxy"
+export HTTPS_PROXY="$https_proxy"
+export NO_PROXY="$no_proxy"
 export TBENCH_DOCKER_IMAGE_SOURCE=pull
 export TBENCH_DOCKER_PULL_PREFIX="ghcr.io/<your-org>/<your-image>:task-"
 export COMPOSE_OVERRIDE_PATH="terminal-rl/remote/compose_override.yaml"
